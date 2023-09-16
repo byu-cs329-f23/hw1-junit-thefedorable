@@ -73,13 +73,23 @@ public class WaitTimeTest {
   @Nested
   @DisplayName("Test the land class")
   class LandTest {
-    Ride[] rides = {};
+    Ride[] rides;
 
+    /**
+     * gets the rides list setup for each test, so it can be inserted into the class
+     */
+    @BeforeEach
+    public void setUp() {
+      Ride ride1 = new Ride("ROTR",true,45);
+      Ride ride2 = new Ride("Indiana Jones",true,25);
+      Ride ride3 = new Ride("Pirates", true, 20);
+      rides = new Ride[]{ride1, ride2, ride3};
+    }
     /**
      * tests get name function
      */
     @Test
-    @DisplayName("Testing get name")
+    @DisplayName("Testing getName")
     public void testGetName() {
       assertAll(
               () -> {
@@ -100,15 +110,73 @@ public class WaitTimeTest {
     @Test
     @DisplayName("Testing average wait time function")
     public void testAvWaitTime() {
-      Ride ride1 = new Ride("ROTR",true,45);
-      Ride ride2 = new Ride("Indiana Jones",true,25);
-      Ride ride3 = new Ride("Pirates", true, 20);
-      Ride[] rides = {ride1, ride2, ride3};
 
       landTest = new Land("diseny", rides);
       int expWaitTimeAv = 30;
       int waitTimeAv =landTest.avWaitTime();
       assertEquals(expWaitTimeAv,waitTimeAv);
+    }
+  }
+
+  @Nested
+  @DisplayName("Test the land class")
+  class ParkTest {
+    Land[] lands;
+    Land land1;
+    Land land2;
+
+    /**
+     * gets the lands list setup for each test, so it can be inserted into the class
+     */
+    @BeforeEach
+    public void setUp() {
+      Ride ride1 = new Ride("ROTR",true,45);
+      Ride ride2 = new Ride("Indiana Jones",true,25);
+      Ride ride3 = new Ride("Pirates", true, 20);
+      Ride[] rides1 = {ride1, ride2, ride3};
+
+      land1 = new Land("disney", rides1);
+
+      Ride ride4 = new Ride("Jurassic Park",true,30);
+      Ride ride5 = new Ride("Harry Potter",true,15);
+      Ride ride6 = new Ride("Transformers", true, 15);
+      Ride[] rides2 = {ride4, ride5, ride6};
+
+      land2 = new Land("Universal", rides2);
+
+      lands = new Land[]{land1, land2};
+    }
+
+    /**
+     * testing the get land function
+     */
+    @Test
+    @DisplayName("Testing getLands")
+    public void testGetLands() {
+      assertAll(
+              () -> {
+                parkTest = new Park(lands);
+                assertNotNull(parkTest.getLands());
+              },
+
+              () -> {
+                Land[] landList = null;
+                parkTest = new Park(landList);
+                assertNull(parkTest.getLands());
+              }
+      );
+    }
+
+    /**
+     * Test function that takes average wait time
+     */
+    @Test
+    @DisplayName("Testing average wait time function")
+    public void testAvWaitTime() {
+      parkTest = new Park(lands);
+      int expAvWaitTime = 25;
+      int avWaitTime = parkTest.getAverageWait();
+      assertEquals(expAvWaitTime,avWaitTime);
     }
   }
 }
