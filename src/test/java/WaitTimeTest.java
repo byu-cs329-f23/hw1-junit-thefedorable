@@ -2,8 +2,14 @@ import attractions.Land;
 import attractions.Park;
 import attractions.Ride;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -78,6 +84,7 @@ public class WaitTimeTest {
       Ride ride2 = new Ride("Indiana Jones",true,25);
       Ride ride3 = new Ride("Pirates", true, 20);
       rides = new Ride[]{ride1, ride2, ride3};
+      landTest = new Land("Adventureland",rides);
     }
     /**
      * tests get name function
@@ -88,13 +95,11 @@ public class WaitTimeTest {
     public void testGetName() {
       assertAll(
               () -> {
-                landTest = new Land("Adventureland",rides);
                 assertEquals("Adventureland", landTest.getName());
               },
 
               () -> {
-                landTest = new Land("AdventureLand", rides);
-                assertNotEquals("Adventureland",landTest.getName());
+                assertNotEquals("AdventureLand",landTest.getName());
               }
       );
     }
@@ -102,15 +107,13 @@ public class WaitTimeTest {
     /**
      * Test function that takes average wait time
      */
-    @Test
-    @Tag("Function")
     @DisplayName("Testing average wait time function")
-    public void testAvWaitTime() {
+    @Tag("Function")
+    @ParameterizedTest(name = "{0} testing land average wait time")
+    @CsvSource({"30"})
 
-      landTest = new Land("diseny", rides);
-      int expWaitTimeAv = 30;
-      int waitTimeAv =landTest.avWaitTime();
-      assertEquals(expWaitTimeAv,waitTimeAv);
+    void testAvWaitTime(int x){
+      assertEquals(x, landTest.avWaitTime());
     }
   }
 
@@ -184,34 +187,44 @@ public class WaitTimeTest {
   @DisplayName("Test the Ride class")
   class RideTest {
 
-    Ride ride1;
-    Ride ride2;
-    Ride ride3;
+    Ride ride0 = new Ride("ROTR",true,45);
+    Ride ride1 = new Ride("Indiana Jones",true,25);
+    Ride ride2 = new Ride("Pirates", true, 20);
+    Ride[] rides = {ride0,ride1,ride2};
 
     /**
      * Test the getWaitTime function for accuracy.
      */
-    @Test
-    @Tag("ReturnAccuracy")
     @DisplayName("Test the GetWaitTime function")
-    void testGetWaitTime() {
-      ride1 = new Ride("ROTR",true,45);
-      ride2 = new Ride("Indiana Jones",true,25);
-      ride3 = new Ride("Pirates", true, 20);
+    @Tag("ReturnAccuracy")
+    @ParameterizedTest(name = "{0} testing ride{1}")
+    @CsvSource({"45,0","25,1","20,2"})
 
-      assertAll(
-              () -> {
-                assertEquals(45, ride1.getWait_time());
-              },
-
-              () -> {
-                assertEquals(25, ride2.getWait_time());
-              },
-
-              () -> {
-                assertEquals(20, ride3.getWait_time());
-              }
-      );
+    void testGetWaitTime(int x,int i){
+      assertEquals(x, rides[i].getWait_time());
     }
+
+    @DisplayName("Testing the getWaitTime function")
+    @Tag("ReturnAccuracy")
+    @TestFactory
+    Stream<DynamicTest> TestGetWaitTime() {
+      int[] x = { 45, 25, 20 };
+
+      Stream<Integer> indices = Stream.iterate(0, i -> i + 1);
+      Stream<DynamicTest> tests = indices
+              .limit(3)
+              .map(i -> {
+                String displayName = MessageFormat.format(
+                        "{0} testing ride{1}",
+                        x[i], i);
+                final int index = i;
+                return DynamicTest.dynamicTest(displayName,
+                        () -> {
+                          Assertions.assertEquals(x[index], rides[index].getWait_time());
+                        });
+              });
+      return tests;
+    }
+
   }
 }
