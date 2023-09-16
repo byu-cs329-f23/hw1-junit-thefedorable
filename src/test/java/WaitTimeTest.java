@@ -2,16 +2,9 @@ import attractions.Land;
 import attractions.Park;
 import attractions.Ride;
 import org.junit.jupiter.api.*;
-//import org.junit.platform.runner.JUnitPlatform;
-//import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 
 /**
@@ -71,7 +64,8 @@ public class WaitTimeTest {
    * Tests the land class
    */
   @Nested
-  @DisplayName("Test the land class")
+  @Tag("ClassTest")
+  @DisplayName("Test the Land class")
   class LandTest {
     Ride[] rides;
 
@@ -89,6 +83,7 @@ public class WaitTimeTest {
      * tests get name function
      */
     @Test
+    @Tag("ReturnAccuracy")
     @DisplayName("Testing getName")
     public void testGetName() {
       assertAll(
@@ -108,6 +103,7 @@ public class WaitTimeTest {
      * Test function that takes average wait time
      */
     @Test
+    @Tag("Function")
     @DisplayName("Testing average wait time function")
     public void testAvWaitTime() {
 
@@ -119,7 +115,8 @@ public class WaitTimeTest {
   }
 
   @Nested
-  @DisplayName("Test the land class")
+  @Tag("ClassTest")
+  @DisplayName("Test the Park class")
   class ParkTest {
     Land[] lands;
     Land land1;
@@ -148,9 +145,10 @@ public class WaitTimeTest {
     }
 
     /**
-     * testing the get land function
+     * testing the get lands function
      */
     @Test
+    @Tag("ReturnAccuracy")
     @DisplayName("Testing getLands")
     public void testGetLands() {
       assertAll(
@@ -171,12 +169,49 @@ public class WaitTimeTest {
      * Test function that takes average wait time
      */
     @Test
+    @Tag("Function")
     @DisplayName("Testing average wait time function")
     public void testAvWaitTime() {
       parkTest = new Park(lands);
       int expAvWaitTime = 25;
       int avWaitTime = parkTest.getAverageWait();
       assertEquals(expAvWaitTime,avWaitTime);
+    }
+  }
+
+  @Nested
+  @Tag("ClassTest")
+  @DisplayName("Test the Ride class")
+  class RideTest {
+
+    Ride ride1;
+    Ride ride2;
+    Ride ride3;
+
+    /**
+     * Test the getWaitTime function for accuracy.
+     */
+    @Test
+    @Tag("ReturnAccuracy")
+    @DisplayName("Test the GetWaitTime function")
+    void testGetWaitTime() {
+      ride1 = new Ride("ROTR",true,45);
+      ride2 = new Ride("Indiana Jones",true,25);
+      ride3 = new Ride("Pirates", true, 20);
+
+      assertAll(
+              () -> {
+                assertEquals(45, ride1.getWait_time());
+              },
+
+              () -> {
+                assertEquals(25, ride2.getWait_time());
+              },
+
+              () -> {
+                assertEquals(20, ride3.getWait_time());
+              }
+      );
     }
   }
 }
