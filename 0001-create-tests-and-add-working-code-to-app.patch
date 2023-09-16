@@ -1,0 +1,623 @@
+From f78214ec5c9d9786622afc467b34ecbb8ff0f2ac Mon Sep 17 00:00:00 2001
+From: thefedorable <tanner.hartwell421@gmail.com>
+Date: Sat, 16 Sep 2023 12:28:02 -0600
+Subject: [PATCH] create tests and add working code to app
+
+---
+ .idea/.gitignore                              |   3 +
+ .idea/checkstyle-idea.xml                     |  16 ++
+ .idea/compiler.xml                            |  13 +
+ .idea/encodings.xml                           |   7 +
+ .idea/jarRepositories.xml                     |  20 ++
+ .idea/misc.xml                                |  12 +
+ .idea/sonarlint/issuestore/index.pb           |   0
+ .idea/sonarlint/securityhotspotstore/index.pb |   0
+ .idea/vcs.xml                                 |   6 +
+ 0001-Link-to-developWorks-tutorial.patch      |  24 ++
+ .../com/makotojava/learn/hellojunit5/App.java |  21 +-
+ .../learn/hellojunit5/JUnit5AppTest.java      | 256 ++++++++++++++----
+ 12 files changed, 311 insertions(+), 67 deletions(-)
+ create mode 100644 .idea/.gitignore
+ create mode 100644 .idea/checkstyle-idea.xml
+ create mode 100644 .idea/compiler.xml
+ create mode 100644 .idea/encodings.xml
+ create mode 100644 .idea/jarRepositories.xml
+ create mode 100644 .idea/misc.xml
+ create mode 100644 .idea/sonarlint/issuestore/index.pb
+ create mode 100644 .idea/sonarlint/securityhotspotstore/index.pb
+ create mode 100644 .idea/vcs.xml
+ create mode 100644 0001-Link-to-developWorks-tutorial.patch
+
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+index 0000000..26d3352
+--- /dev/null
++++ b/.idea/.gitignore
+@@ -0,0 +1,3 @@
++# Default ignored files
++/shelf/
++/workspace.xml
+diff --git a/.idea/checkstyle-idea.xml b/.idea/checkstyle-idea.xml
+new file mode 100644
+index 0000000..760d829
+--- /dev/null
++++ b/.idea/checkstyle-idea.xml
+@@ -0,0 +1,16 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CheckStyle-IDEA" serialisationVersion="2">
++    <checkstyleVersion>10.9.3</checkstyleVersion>
++    <scanScope>JavaOnly</scanScope>
++    <copyLibs>true</copyLibs>
++    <option name="thirdPartyClasspath" />
++    <option name="activeLocationIds" />
++    <option name="locations">
++      <list>
++        <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
++        <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
++      </list>
++    </option>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+new file mode 100644
+index 0000000..7c51fce
+--- /dev/null
++++ b/.idea/compiler.xml
+@@ -0,0 +1,13 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <annotationProcessing>
++      <profile name="Maven default annotation processors profile" enabled="true">
++        <sourceOutputDir name="target/generated-sources/annotations" />
++        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
++        <outputRelativeToContentRoot value="true" />
++        <module name="HelloJUnit5" />
++      </profile>
++    </annotationProcessing>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/encodings.xml b/.idea/encodings.xml
+new file mode 100644
+index 0000000..aa00ffa
+--- /dev/null
++++ b/.idea/encodings.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Encoding">
++    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
++    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/jarRepositories.xml b/.idea/jarRepositories.xml
+new file mode 100644
+index 0000000..712ab9d
+--- /dev/null
++++ b/.idea/jarRepositories.xml
+@@ -0,0 +1,20 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RemoteRepositoriesConfiguration">
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Central Repository" />
++      <option name="url" value="https://repo.maven.apache.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Maven Central repository" />
++      <option name="url" value="https://repo1.maven.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="jboss.community" />
++      <option name="name" value="JBoss Community repository" />
++      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
++    </remote-repository>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+index 0000000..3b605b8
+--- /dev/null
++++ b/.idea/misc.xml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ExternalStorageConfigurationManager" enabled="true" />
++  <component name="MavenProjectsManager">
++    <option name="originalFiles">
++      <list>
++        <option value="$PROJECT_DIR$/pom.xml" />
++      </list>
++    </option>
++  </component>
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="openjdk-19 (2)" project-jdk-type="JavaSDK" />
++</project>
+\ No newline at end of file
+diff --git a/.idea/sonarlint/issuestore/index.pb b/.idea/sonarlint/issuestore/index.pb
+new file mode 100644
+index 0000000..e69de29
+diff --git a/.idea/sonarlint/securityhotspotstore/index.pb b/.idea/sonarlint/securityhotspotstore/index.pb
+new file mode 100644
+index 0000000..e69de29
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+index 0000000..35eb1dd
+--- /dev/null
++++ b/.idea/vcs.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/0001-Link-to-developWorks-tutorial.patch b/0001-Link-to-developWorks-tutorial.patch
+new file mode 100644
+index 0000000..659ccc3
+--- /dev/null
++++ b/0001-Link-to-developWorks-tutorial.patch
+@@ -0,0 +1,24 @@
++From 2a18bb077cd60c52994f32f99805a3ae0a797523 Mon Sep 17 00:00:00 2001
++From: Pedro <pedromartinez11@gmail.com>
++Date: Wed, 7 Mar 2018 14:09:06 -0800
++Subject: [PATCH] Link to developWorks tutorial
++
++---
++ README.md | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/README.md b/README.md
++index 48f4ecd..d7ce991 100644
++--- a/README.md
+++++ b/README.md
++@@ -1,6 +1,6 @@
++ # HelloJUnit5
++ 
++-This repository accompanies Part 1 of my Junit 5 Tutorial series on IBM developerWorks.
+++This repository accompanies Part 1 of my Junit 5 Tutorial series on [IBM developerWorks](https://ibm.co/2uWIwcp).
++ 
++ Publication date: July 2017
++ Update: December 2017
++-- 
++2.39.1.windows.1
++
+diff --git a/src/main/java/com/makotojava/learn/hellojunit5/App.java b/src/main/java/com/makotojava/learn/hellojunit5/App.java
+index 34b91b0..e211e87 100644
+--- a/src/main/java/com/makotojava/learn/hellojunit5/App.java
++++ b/src/main/java/com/makotojava/learn/hellojunit5/App.java
+@@ -37,14 +37,19 @@ public class App {
+    */
+   public long add(long[] operands) {
+     // Compute the sum
+-    long ret = Long.MIN_VALUE;
+-    // TDD - add this once we run all the unit tests.
+-    //
+-    // TODO: As an exercise, implement this method so that all of the unit tests
+-    /// you write for it pass. Once you do that, you're done!
+-    //
+-    // Hint: if you get stuck, look at the {@link com.makotojava.learn.hellojunit5.solution.App App class}
+-    //
++    long ret = 0;
++
++    if (operands == null) {
++      throw new IllegalArgumentException("List can't be null");
++    }
++
++    if (operands.length == 0) {
++      throw new IllegalArgumentException("List can't be empty");
++    }
++
++    for (long operand : operands) {
++      ret += operand;
++    }
+     return ret;
+   }
+ }
+diff --git a/src/test/java/com/makotojava/learn/hellojunit5/JUnit5AppTest.java b/src/test/java/com/makotojava/learn/hellojunit5/JUnit5AppTest.java
+index d67538c..252f379 100644
+--- a/src/test/java/com/makotojava/learn/hellojunit5/JUnit5AppTest.java
++++ b/src/test/java/com/makotojava/learn/hellojunit5/JUnit5AppTest.java
+@@ -1,19 +1,17 @@
+ package com.makotojava.learn.hellojunit5;
+ 
+-import static org.junit.jupiter.api.Assertions.fail;
+-
+-import org.junit.jupiter.api.AfterAll;
+-import org.junit.jupiter.api.AfterEach;
+-import org.junit.jupiter.api.BeforeAll;
+-import org.junit.jupiter.api.BeforeEach;
+-import org.junit.jupiter.api.Disabled;
+-import org.junit.jupiter.api.DisplayName;
+-import org.junit.jupiter.api.Test;
++import org.junit.jupiter.api.*;
+ import org.junit.platform.runner.JUnitPlatform;
+ import org.junit.runner.RunWith;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
++import java.time.LocalDateTime;
++
++import static org.junit.jupiter.api.Assertions.*;
++import static org.junit.jupiter.api.Assumptions.assumeTrue;
++import static org.junit.jupiter.api.Assumptions.assumingThat;
++
+ /**
+  * JUnit 5 (with JUnitPlatform.class)
+  * 
+@@ -27,26 +25,43 @@ import org.slf4j.LoggerFactory;
+  * </ol>
+  *
+  */
++@RunWith(JUnitPlatform.class)
++@DisplayName("Testing using JUnit 5")
+ public class JUnit5AppTest {
+ 
+   // Create a JDK Logger here
+-
++  private static final Logger log = LoggerFactory.getLogger(JUnit5AppTest.class);
+   // Create a fixture for the class under test
+-
++  private App junitClassTester;
+   // Do something before ANY test is run in this class
+   public static void init() {
++    log.info("initiate");
+   }
+ 
+   // Do something after ALL tests in this class are run
+   public static void done() {
++    log.info("done");
+   }
+ 
+   // Create an instance of the test class before each @Test method is executed
++  @BeforeEach
++  public void setUp() {
++    log.info("BeforeEach");
++    junitClassTester = new com.makotojava.learn.hellojunit5.App();
++  }
+ 
+   // Destroy reference to the instance of the test class after each @Test method is executed
+-
++  @AfterEach
++  public void tearDown() {
++    log.info("AfterEach");
++    junitClassTester = null;
++  }
+   // Disabled test
++  @Test
++  @Disabled
++  @DisplayName("A disabled test")
+   void testNotRun() {
++    log.info("disabled test so it shouldn't run");
+   }
+ 
+   /**
+@@ -66,12 +81,33 @@ public class JUnit5AppTest {
+    * {@link org.junit.jupiter.api.Assertions#assertAll(org.junit.jupiter.api.function.Executable...) assertAll()}
+    * </ol>
+    */
++  @Test
++  @DisplayName("testing add with 3 different lists")
+   public void testAdd() {
+-    //
+-    // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see the
+-    // buttery smooth javadoc above.)
+-    //
+-    fail("Test not implemented!");
++    assertNotNull(junitClassTester);
++
++    assertAll(
++            () -> {
++              long expSum = 10;
++              long[] sumList = {1, 2, 3, 4};
++              long sum = junitClassTester.add(sumList);
++              assertEquals(expSum,sum);
++            },
++
++            () -> {
++              long expSum = 1064;
++              long[] sumList = {20, 934, 110};
++              long sum = junitClassTester.add(sumList);
++              assertEquals(expSum,sum);
++            },
++
++            () -> {
++              long expSum = 12;
++              long[] sumList = {2, 4, 6};
++              long sum = junitClassTester.add(sumList);
++              assertEquals(expSum,sum);
++            }
++    );
+   }
+ 
+   /**
+@@ -92,8 +128,9 @@ public class JUnit5AppTest {
+    * </ol>
+    * 
+    */
++  @Nested
++  @DisplayName("Adding negative numbers")
+   class NegativeNumbersTest {
+-
+     /**
+      * testAdd() - Exercises:
+      * <ol>
+@@ -112,12 +149,34 @@ public class JUnit5AppTest {
+      * {@link org.junit.jupiter.api.Assertions#assertAll(org.junit.jupiter.api.function.Executable...) assertAll()}
+      * </ol>
+      */
++
++    @Test
++    @DisplayName("Testing add with 3 different lists of negative numbers")
+     public void testAdd() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
++      assertNotNull(junitClassTester);
++
++      assertAll(
++              () -> {
++                long expSum = -10;
++                long[] sumList = {-1, -2, -3, -4};
++                long sum = junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              },
++
++              () -> {
++                long expSum = -1064;
++                long[] sumList = {-20, -934, -110};
++                long sum = junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              },
++
++              () -> {
++                long expSum = -12;
++                long[] sumList = {-2, -4, -6};
++                long sum = junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              }
++      );
+     }
+   }
+ 
+@@ -130,6 +189,8 @@ public class JUnit5AppTest {
+    * </ol>
+    * 
+    */
++  @Nested
++  @DisplayName("Adding both positive and negative numbers")
+   class PositiveAndNegativeNumbersTest {
+ 
+     /**
+@@ -150,12 +211,34 @@ public class JUnit5AppTest {
+      * {@link org.junit.jupiter.api.Assertions#assertAll(org.junit.jupiter.api.function.Executable...) assertAll()}
+      * </ol>
+      */
++
++    @Test
++    @DisplayName("Test by adding 3 lists of both + and - numbers")
+     public void testAdd() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
++      assertNotNull(junitClassTester);
++
++      assertAll(
++              () -> {
++                long expSum = 2;
++                long[] sumList = {-1, 2, -3, 4};
++                long sum = junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              },
++
++              () -> {
++                long expSum = 804;
++                long[] sumList = {-20, 934, -110};
++                long sum = junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              },
++
++              () -> {
++                long expSum = 0;
++                long[] sumList = {-2, -4, 6};
++                long sum = junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              }
++      );
+     }
+ 
+     /**
+@@ -171,12 +254,19 @@ public class JUnit5AppTest {
+      * <li>Ensure the actual sum matches the expected sum.</li>
+      * </ol>
+      */
++
++    @Test
++    @DisplayName("A test that should only run on a Friday")
+     public void testAdd_OnlyOnFriday() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
++      assertNotNull(junitClassTester);
++
++      LocalDateTime timeDate = LocalDateTime.now();
++      assumeTrue(timeDate.getDayOfWeek().getValue() == 5, "Test skipped because it isn't Friday");
++
++      long[] sumList = { 1, 2, 3, 4, 5 };
++      long expSum = 15;
++      long sum = junitClassTester.add(sumList);
++      assertEquals(expSum, sum);
+     }
+ 
+     /**
+@@ -193,14 +283,21 @@ public class JUnit5AppTest {
+      * <li>Ensure the actual sum matches the expected sum.</li>
+      * </ol>
+      */
++
++    @Test
++    @DisplayName("A test that should only run on a Friday with Lambda")
+     public void testAdd_OnlyOnFriday_WithLambda() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
+-    }
++      assertNotNull(junitClassTester);
+ 
++      LocalDateTime timeDate = LocalDateTime.now();
++      assumingThat(timeDate.getDayOfWeek().getValue() == 5,
++              () -> {
++                long[] sumList = { 1, 2, 3, 4, 5 };
++                long expSum = 15;
++                long sum = junitClassTester.add(sumList);
++                assertEquals(expSum, sum);
++              });
++    }
+   }
+ 
+   /**
+@@ -212,6 +309,9 @@ public class JUnit5AppTest {
+    * </ol>
+    * 
+    */
++
++  @Nested
++  @DisplayName("For a single operand")
+   class JUnit5AppSingleOperandTest {
+ 
+     /**
+@@ -231,12 +331,27 @@ public class JUnit5AppTest {
+      * {@link org.junit.jupiter.api.Assertions#assertAll(org.junit.jupiter.api.function.Executable...) assertAll()}
+      * </ol>
+      */
++
++    @Test
++    @DisplayName("The numbers are > 0")
+     public void testAdd_NumbersGt0() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
++      assertNotNull(junitClassTester);
++
++      assertAll(
++              () -> {
++                long expSum = 1;
++                long[] sumList = { 1 };
++                long sum =junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              },
++
++              () -> {
++                long expSum = 0;
++                long[] sumList = { 0 };
++                long sum =junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              }
++      );
+     }
+ 
+     /**
+@@ -256,12 +371,27 @@ public class JUnit5AppTest {
+      * {@link org.junit.jupiter.api.Assertions#assertAll(org.junit.jupiter.api.function.Executable...) assertAll()}
+      * </ol>
+      */
++
++    @Test
++    @DisplayName("The numbers are < 0")
+     public void testAdd_NumbersLt0() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
++      assertNotNull(junitClassTester);
++
++      assertAll(
++              () -> {
++                long expSum = -1;
++                long[] sumList = { -1 };
++                long sum =junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              },
++
++              () -> {
++                long expSum = -10;
++                long[] sumList = { -10 };
++                long sum =junitClassTester.add(sumList);
++                assertEquals(expSum,sum);
++              }
++      );
+     }
+   }
+ 
+@@ -274,6 +404,8 @@ public class JUnit5AppTest {
+    * </ol>
+    * 
+    */
++  @Nested
++  @DisplayName("Adding nothing")
+   class JUnit5AppZeroOperandsTest {
+ 
+     /**
+@@ -289,12 +421,13 @@ public class JUnit5AppTest {
+      * assertThrows()} method).</li>
+      * </ol>
+      */
++    @Test
++    @DisplayName("Adding with nothing in the list")
+     public void testAdd_ZeroOperands_EmptyArgument() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
++      assertNotNull(junitClassTester);
++
++      long[] sumList = {};
++      assertThrows(IllegalArgumentException.class, () -> junitClassTester.add(sumList));
+     }
+ 
+     /**
+@@ -311,12 +444,17 @@ public class JUnit5AppTest {
+      * <li>The test should fail if the message in the exception is not "Operands argument cannot be null".</li>
+      * </ol>
+      */
++
++    @Test
++    @DisplayName("List is just null")
+     public void testAdd_ZeroOperands_NullArgument() {
+-      //
+-      // EXERCISE: TODO: ADD CODE HERE (See Javadoc comments for instructions. Use the Javadoc View in Eclipse to see
+-      // the buttery smooth javadoc above.)
+-      //
+-      fail("Test not implemented!");
++      assertNotNull(junitClassTester);
++
++      long[] sumList = null;
++      Throwable expectedException = assertThrows(IllegalArgumentException.class,
++              () -> junitClassTester.add(sumList));
++
++      assertEquals("List can't be null", expectedException.getLocalizedMessage());
+     }
+ 
+   }
+-- 
+2.39.1.windows.1
+
